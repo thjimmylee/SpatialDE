@@ -9,7 +9,6 @@ import numpy as np
 from scipy import optimize
 from scipy import linalg
 from scipy import stats
-from scipy.misc import derivative
 from scipy.special import logsumexp
 
 with warnings.catch_warnings():
@@ -20,6 +19,12 @@ import pandas as pd
 
 from .util import qvalue
 
+def _derivative(func, x0, dx=1.0, n=1, args=(), order=3):
+    if n != 1:
+        raise NotImplementedError("Shim only supports first derivative (n=1).")
+    return (func(x0 + dx, *args) - func(x0 - dx, *args)) / (2.0 * dx)
+
+derivative = _derivative
 
 def get_l_limits(X):
     Xsq = np.sum(np.square(X), 1)
